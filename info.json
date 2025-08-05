@@ -1,0 +1,13 @@
+{
+    "version": "0.0.1",
+    "name": "hogtorio",
+    "title": "Hogtorio",
+    "description": "Bringing gregging to Factorio",
+    "author": "almajd3713",
+    "license": "MIT",
+    "factorio_version": "2.0",
+    "dependencies": [
+        "base >= 2.0.0"
+    ],
+    "homepage": "https://github.com/almajd3713/factorio_radar"
+}

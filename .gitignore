@@ -1,3 +1,5 @@
 .vscode
 mod-list.json
 factorio_launcher.bat
+**/*.zip
+**/*.aseprite
