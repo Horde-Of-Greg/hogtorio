@@ -2,13 +2,21 @@
 local material_check = require("types")
 require("util.array_manipulation")
 require("util.str_manipulation")
+local COMMON_MATERIAL_RELATIONSHIPS = require("data.constants").COMMON_MATERIAL_RELATIONSHIPS
 
 local Material = {}
 Material.__index = Material
 
+function get_recipe_time(base, hardness)
+    return base * (hardness ^ 1.4)
+end
+
 function Material:load_default_material_flags()
     self.flags = {
-        "ingot", "plate", "stick"
+        -- {category, hardness_base, amount}
+        ingot = {"crafting", 1}, 
+        plate = {"bender", 1.5}, 
+        stick = {"lathe", 2.5, 2}
     }
 end
 
@@ -30,6 +38,8 @@ function Material:new(
     instance.description = props.description
     instance.icon_set = props.icon_set or "dull"
     instance.recipes = props.recipes or {}
+    instance.min_voltage = props.min_voltage or "lv"
+    instance.hardness = props.hardness or 1
 
     instance:load_default_material_flags()
     if props.flags then
@@ -60,7 +70,7 @@ function Material:generate_icon(material)
 end
 
 function Material:create_items()
-    for _, material in pairs(self.flags) do
+    for material, flag in pairs(self.flags) do
         icons = self:generate_icon(material)
         data:extend({
             {
@@ -77,22 +87,31 @@ function Material:create_items()
     end
 end
 
+
 function Material:create_default_recipes()
-    for _, material in pairs(self.flags) do
+    for material, flags in pairs(self.flags) do
+        if flags[1] == "crafting" then
+            recipe_machine = "crafting"
+        else
+            recipe_machine = self.min_voltage .. "-" .. flags[1]
+        end
         data:extend({
             {
                 type = "recipe",
                 name = self.name .. "-" .. material,
                 localised_name = self:get_locale_name(material),
-                category = "crafting",
+                category = recipe_machine,
                 subgroup = "materials-" .. material .. "s",
                 order = "a",
-                energy_required = 1,
-                ingredients = { { type = "item", name = self.name .. "-" .. material, amount = 1 } },
+                energy_required = get_recipe_time(flags[2], self.hardness),
+                ingredients = {{
+                        type = "item", 
+                        name = self.name .. "-" .. COMMON_MATERIAL_RELATIONSHIPS[material], amount = 1 
+                }},
                 results = {{
                     type = "item",
                     name = self.name .. "-" .. material,
-                    amount = 1
+                    amount = flags[3] or 1
                 }}
             }
         })
@@ -109,7 +128,7 @@ function Material:create_recipes(load_default)
                 type = "recipe",
                 name = self:get_locale_name(recipe.name),
                 category = recipe.category or "crafting",
-                subgroup = recipe.subgroup or "materials-" .. recipe.name .. "s",
+                subgroup = recipe.subgroup or ("materials-" .. recipe.name .. "s"),
                 order = "a",
                 energy_required = recipe.energy_required or 1,
                 ingredients = recipe.ingredients,

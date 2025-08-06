@@ -3,7 +3,7 @@ local voltages = require("voltages_store")
 
 local voltages_fluid = {}
 
-for _, voltage in ipairs(voltages) do
+for i, voltage in ipairs(voltages) do
     table.insert(voltages_fluid, {
         type = "fluid",
         name = voltage.name,
@@ -13,7 +13,8 @@ for _, voltage in ipairs(voltages) do
         icon = voltage.icon,
         base_color = voltage.base_color,
         flow_color = voltage.flow_color,
-        default_temperature = 100,
+        default_temperature = 300,
+        fuel_value = tostring(32 * (2 ^ i)) .. "J",
     })
     table.insert(voltages_fluid, {
         type = "recipe",
