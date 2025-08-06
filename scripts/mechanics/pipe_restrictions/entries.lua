@@ -8,10 +8,10 @@ register_fluid_category("hv-power")
 register_fluid_category("ev-power")
 
 -- Assign fluids to each category
-register_fluid("voltage_lv", "lv-power")
-register_fluid("voltage_mv", "mv-power")
-register_fluid("voltage_hv", "hv-power")
-register_fluid("voltage_ev", "ev-power")
+register_fluid("voltage-lv", "lv-power")
+register_fluid("voltage-mv", "mv-power")
+register_fluid("voltage-hv", "hv-power")
+register_fluid("voltage-ev", "ev-power")
 
 -- Register pipe restrictions for each prototype
 register_prototype("lv-wire", {"lv-power"}, "Voltage Overload!")

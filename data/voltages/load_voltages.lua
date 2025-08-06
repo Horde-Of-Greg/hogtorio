@@ -14,7 +14,7 @@ for i, voltage in ipairs(voltages) do
         base_color = voltage.base_color,
         flow_color = voltage.flow_color,
         default_temperature = 300,
-        fuel_value = tostring(32 * (2 ^ i)) .. "J",
+        fuel_value = tostring(32 * (4 ^ (i - 1))) .. "J",
     })
     table.insert(voltages_fluid, {
         type = "recipe",

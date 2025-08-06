@@ -1,7 +1,7 @@
 
 return {
     {
-        name = 'voltage_lv',
+        name = 'voltage-lv',
         locale_name = 'Low Voltage',
         description = 'Low voltage level, stings when touched.',
         icon = '__hogtorio__/graphics/voltages/lv/lv.png',
@@ -11,7 +11,7 @@ return {
         
     },
     {
-        name = 'voltage_mv',
+        name = 'voltage-mv',
         locale_name = 'Medium Voltage',
         description = 'Medium voltage level, can cause burns.',
         icon = '__hogtorio__/graphics/voltages/mv/mv.png',
@@ -20,7 +20,7 @@ return {
         energy_required = 0.4,
     },
     {
-        name = 'voltage_hv',
+        name = 'voltage-hv',
         locale_name = 'High Voltage',
         description = 'High voltage level, can cause electrocution.',
         icon = '__hogtorio__/graphics/voltages/hv/hv.png',
@@ -29,7 +29,7 @@ return {
         energy_required = 0.8,
     },
     {
-        name = 'voltage_ev',
+        name = 'voltage-ev',
         locale_name = 'Extreme Voltage',
         description = 'Extreme voltage level, can cause death.',
         icon = '__hogtorio__/graphics/voltages/ev/ev.png',

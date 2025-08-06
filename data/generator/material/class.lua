@@ -95,6 +95,14 @@ function Material:create_default_recipes()
         else
             recipe_machine = self.min_voltage .. "-" .. flags[1]
         end
+        local ingredients = {}
+        if COMMON_MATERIAL_RELATIONSHIPS[material] then
+            table.insert(ingredients, {
+                type = "item",
+                name = self.name .. "-" .. COMMON_MATERIAL_RELATIONSHIPS[material],
+                amount = 1
+            })
+        end
         data:extend({
             {
                 type = "recipe",
@@ -104,10 +112,7 @@ function Material:create_default_recipes()
                 subgroup = "materials-" .. material .. "s",
                 order = "a",
                 energy_required = get_recipe_time(flags[2], self.hardness),
-                ingredients = {{
-                        type = "item", 
-                        name = self.name .. "-" .. COMMON_MATERIAL_RELATIONSHIPS[material], amount = 1 
-                }},
+                ingredients = ingredients,
                 results = {{
                     type = "item",
                     name = self.name .. "-" .. material,

@@ -54,7 +54,8 @@ local function get_machine_fuelbox(machine)
                 flow_direction = "input-output",
                 direction = defines.direction.north,
                 position = {0, -machine.height / 2 + 0.5}
-            }}
+            }},
+            filter = "voltage-" .. machine.voltage,
         }
 end
 
@@ -77,7 +78,6 @@ local function get_graphics_set(machine)
     end
     return build_anim:get_graphics({
         machine.animation_progress or 0,
-        machine.always_draw_idle_animation or true
     })
 end
 
