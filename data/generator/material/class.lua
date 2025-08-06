@@ -69,7 +69,7 @@ function Material:create_items()
                 localised_name = self:get_locale_name(material),
                 localised_description = self.description,
                 icons = icons,
-                subgroup = "materials",
+                subgroup = "materials-" .. material .. "s",
                 order = "a",
                 stack_size = 100
             }
@@ -85,7 +85,7 @@ function Material:create_default_recipes()
                 name = self.name .. "-" .. material,
                 localised_name = self:get_locale_name(material),
                 category = "crafting",
-                subgroup = "materials",
+                subgroup = "materials-" .. material .. "s",
                 order = "a",
                 energy_required = 1,
                 ingredients = { { type = "item", name = self.name .. "-" .. material, amount = 1 } },
@@ -109,7 +109,7 @@ function Material:create_recipes(load_default)
                 type = "recipe",
                 name = self:get_locale_name(recipe.name),
                 category = recipe.category or "crafting",
-                subgroup = "materials",
+                subgroup = recipe.subgroup or "materials-" .. recipe.name .. "s",
                 order = "a",
                 energy_required = recipe.energy_required or 1,
                 ingredients = recipe.ingredients,

@@ -32,3 +32,25 @@ generate({
     icon_size = 64,
     subgroups = voltage_proc_machines_subgroups
 })
+
+local material_types = {
+    {"ingots", "Ingots"},
+    {"plates", "Plates"},
+    {"sticks", "Rods"},
+    {"gems", "Gems"},
+    {"wires", "Wires"},
+    {"dusts", "Dusts"},
+
+}
+
+for i, material_type in ipairs(material_types) do
+    data:extend({
+        {
+            type = "item-subgroup",
+            name = "materials-" .. material_type[1],
+            localised_name = "Hogtorio " .. material_type[2],
+            group = "intermediate-products",
+            order = tostring(i) .. "[material-type]",
+        }
+    })
+end
