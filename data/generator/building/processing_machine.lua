@@ -50,11 +50,17 @@ local function get_machine_fuelbox(machine)
         pipe_covers = pipecoverspictures(),
             pipe_picture = assembler2pipepictures(),
             volume = machine.power_buffer or 100,
-            pipe_connections = {{
-                flow_direction = "input-output",
-                direction = defines.direction.north,
-                position = {0, -machine.height / 2 + 0.5}
-            }},
+            pipe_connections = {
+                {
+                    flow_direction = "input-output",
+                    direction = defines.direction.north,
+                    position = {0, -machine.height / 2 + 0.5}
+                }, {
+                    flow_direction = "input-output",
+                    direction = defines.direction.south,
+                    position = {0, machine.height / 2 - 0.5}
+                }
+            },
             filter = "voltage-" .. machine.voltage,
         }
 end
@@ -66,7 +72,7 @@ local function get_machine_collision_box(machine)
     local squeeze_space = machine.squeeze_space or 0.05
 
     return {
-        collision_box = machine.collision_box or {{-x, -y }, {x, y }},
+        collision_box = machine.collision_box or {{-x + squeeze_space, -y + squeeze_space}, {x - squeeze_space, y - squeeze_space}},
         selection_box = machine.selection_box or {{-x - squeeze_space, -y - squeeze_space}, {x + squeeze_space, y + squeeze_space}},
     }
 end
