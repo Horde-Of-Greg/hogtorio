@@ -9,12 +9,12 @@ local function get_machine_base_sprite(machine)
     local m_name = machine.name:match("-(%w+)$")
     table.insert(layers, {
         icon = "__hogtorio__/graphics/buildings/processing_machine/base_voltage/" .. m_volt .. "/side.png",
-        icon_size = machine.icon_size or 64,
+        icon_size = machine.icon_size or 16,
         scale = machine.icon_scale or 1,
     })
     table.insert(layers, {
         icon = "__hogtorio__/graphics/buildings/processing_machine/machine/" .. m_name .. "/overlay_front.png",
-        icon_size = machine.icon_size or 64,
+        icon_size = machine.icon_size or 16,
         scale = machine.icon_scale or 1,
     })
     return layers

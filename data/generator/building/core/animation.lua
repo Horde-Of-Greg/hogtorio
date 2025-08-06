@@ -13,6 +13,7 @@ local function get_animation_layers(layers)
             height = layer.height or 64,
             animation_speed = layer.animation_speed or 1,
             scale = layer.scale or 1,
+            repeat_count = layer.repeat_count or 1,
         })
     end
     return {
@@ -31,7 +32,7 @@ end
 function BuildingAnimation:add_state(anim)
     local state = {
         name = anim.name,
-        duration = anim.duration or 1,
+        duration = anim.frame_duration or 1,
         next_active = anim.next_active or "working",
         next_inactive = anim.next_inactive or "idle",
     }

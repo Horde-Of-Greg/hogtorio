@@ -7,8 +7,6 @@ local entries = {
         width = 3,
         height = 3,
         order = "b",
-        icon_size = 16,
-        icon_scale = 1,
         sprite_scale = 6,
         recipe = {
             lv = {
@@ -41,6 +39,47 @@ local entries = {
                 }}
             }
         }
+    }, {
+        name = "lathe",
+        locale_name = "Lathe",
+        width = 3,
+        height = 3,
+        order = "l",
+        animation_tempo = 6,
+        sprite_scale = 6,
+        recipe = {
+            lv = {
+                ingredients = {
+                    { "steel-plate",        10 },
+                    { "electronic-circuit", 5 },
+                    { "iron-gear-wheel",    5 }
+                }
+            },
+        },
+        states = {
+            {
+                name = 'idle',
+                next_active = 'working',
+                layers = {{
+                    filename = "__hogtorio__/graphics/buildings/processing_machine/machine/lathe/overlay_front.png",
+                    width = 16,
+                    height = 16,
+                    scale = 6,
+                    repeat_count = 6,
+                }}
+            }, {
+                name = 'working',
+                next_inactive = 'idle',
+                layers = {{
+                    filename = "__hogtorio__/graphics/buildings/processing_machine/machine/lathe/overlay_front_active.png",
+                    width = 16,
+                    height = 16,
+                    scale = 6,
+                    frame_count = 6,
+                    frame_duration = 6 * 3, -- 3 ticks per frame
+                }}
+            }
+        }
     }
 }
 
@@ -58,6 +97,7 @@ for _, entry in ipairs(entries) do
                 width = 16,
                 height = 16,
                 scale = new_entry.sprite_scale or 1,
+                repeat_count = new_entry.animation_tempo or 1,
             }
             table.insert(state.layers, 1, base_layer)
         end 
