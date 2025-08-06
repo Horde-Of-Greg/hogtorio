@@ -10,7 +10,7 @@ shiny_set = {
 
 -- Checking if material is in the set, otherwise fallback to dull
 -- {material_set, is_overlay}
-function material_check(material, icon_set)
+local function material_check(material, icon_set)
     if icon_set == 'metallic' and contains(metallic_set, material) then
         return {'metallic', false}
     elseif icon_set == 'bright' and contains(bright_set, material) then
@@ -20,3 +20,5 @@ function material_check(material, icon_set)
     else return {'dull', false}
     end
 end
+
+return material_check

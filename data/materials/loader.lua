@@ -1,4 +1,4 @@
-
+local generate_material = require("data.generator.loader").material
 data:extend({
     {
         type = "item-subgroup",
@@ -8,12 +8,8 @@ data:extend({
     }
 })
 
-
-require('class')
 local elements = require('store.elements')
 
 for _, element in pairs(elements) do
-    local element_entity = Material:new(element)
-    element_entity:create_items()
-    element_entity:create_recipes(true)
+    generate_material(element)
 end

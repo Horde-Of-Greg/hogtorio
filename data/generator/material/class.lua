@@ -1,9 +1,9 @@
 
-require("types")
+local material_check = require("types")
 require("util.array_manipulation")
 require("util.str_manipulation")
 
-Material = {}
+local Material = {}
 Material.__index = Material
 
 function Material:load_default_material_flags()
@@ -103,20 +103,20 @@ function Material:create_recipes(load_default)
     if load_default then
         self:create_default_recipes()
     end
-    if #self.recipes > 0 then
-        for _, recipe in ipairs(self.recipes) do
-            data:extend({
-                {
-                    type = "recipe",
-                    name = self:get_locale_name(recipe.name),
-                    category = "crafting",
-                    subgroup = "materials",
-                    order = "a",
-                    energy_required = recipe.energy_required or 1,
-                    ingredients = recipe.ingredients,
-                    result = recipe.result
-                }
-            })
-        end
+    for _, recipe in ipairs(self.recipes) do
+        data:extend({
+            {
+                type = "recipe",
+                name = self:get_locale_name(recipe.name),
+                category = recipe.category or "crafting",
+                subgroup = "materials",
+                order = "a",
+                energy_required = recipe.energy_required or 1,
+                ingredients = recipe.ingredients,
+                result = recipe.result
+            }
+        })
     end
 end
+
+return Material
