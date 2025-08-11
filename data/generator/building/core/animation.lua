@@ -2,18 +2,19 @@
 local BuildingAnimation = {}
 BuildingAnimation.__index = BuildingAnimation
 
-local function get_animation_layers(layers)
+local function get_animation_layers(layers, speed)
     local animation_layers = {}
     for _, layer in ipairs(layers) do
         table.insert(animation_layers, {
             filename = layer.filename,
             frame_count = layer.frame_count or 1,
-            line_length = layer.line_length or 1,
+            line_length = layer.line_length,
+            lines_per_file = layer.lines_per_file or layer.frame_count or 1,
             width = layer.width or 64,
             height = layer.height or 64,
-            animation_speed = layer.animation_speed or 1,
+            animation_speed = speed,
             scale = layer.scale or 1,
-            repeat_count = layer.repeat_count or 1,
+            repeat_count = layer.repeat_count,
         })
     end
     return {
@@ -25,23 +26,33 @@ function BuildingAnimation:new(name)
     local instance = setmetatable({}, self)
     instance.name = name
     instance.states = {}
+    instance.visuals = {}
+    instance.base_anim = {}
     return instance
 end
 
 
 function BuildingAnimation:add_state(anim)
+    local duration = (anim.duration or 1) / (anim.speed or 1)
+    if anim.name == "base" then
+        -- This is a special case for the base animation
+        self.base_anim = get_animation_layers(anim.layers)
+        return
+    end
     local state = {
         name = anim.name,
-        duration = anim.frame_duration or 1,
+        duration = duration,
         next_active = anim.next_active or "working",
         next_inactive = anim.next_inactive or "idle",
     }
-    local work_vis = {
+    table.insert(self.states, state)
+    
+    local vis = {
+        draw_in_states = { anim.name },
         always_draw = true,
-        draw_in_states = {anim.name},
-        animation = get_animation_layers(anim.layers),
+        animation = get_animation_layers(anim.layers, anim.speed),
     }
-    table.insert(self.states, {state, work_vis})
+    table.insert(self.visuals, vis)
 end
 
 function BuildingAnimation:get_states()
@@ -69,12 +80,16 @@ function BuildingAnimation:get_work_visuals()
     return tbl
 end
 
+-- This function simplifies to combine the results
 function BuildingAnimation:get_graphics(props)
     return {
-        animation_progress = props.animation_progress or 0,
-        always_draw_idle_animation = props.always_draw_idle_animation or true,
-        states = self:get_states(),
-        working_visualisations = self:get_work_visuals()
+        idle_animation = self.base_anim,
+
+        states = self.states,
+
+        working_visualisations = self.visuals,
+        
+        always_draw_idle_animation = true,
     }
 end
 

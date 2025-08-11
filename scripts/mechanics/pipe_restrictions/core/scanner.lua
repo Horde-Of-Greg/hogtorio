@@ -49,10 +49,6 @@ if not storage.pipe_destruction_queue then
 end
 
 function process_entity_for_destruction(entity_id, entity)
-    -- if #storage.pipe_destruction_queue == 0 then
-    --     return
-    -- end
-
     if entity and entity.valid then
         storage.registered_entities[entity_id] = nil
         local vol = entity.prototype.fluidbox_prototypes[1].volume
