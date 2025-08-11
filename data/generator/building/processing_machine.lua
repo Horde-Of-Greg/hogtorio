@@ -88,6 +88,7 @@ local function get_graphics_set(machine)
 end
 
 local function generate(machine)
+    -- Default category
     generate_recipe_group({
         name = machine.name,
         order = machine.order or "a",
@@ -106,6 +107,11 @@ local function generate(machine)
         stack_size = 64
     }
     local collision = get_machine_collision_box(machine)
+    local total_categories = {machine.name}
+    -- extend total_categories with custom ones from machine
+    for _, category in ipairs(machine.custom_recipe_categories or {}) do
+        table.insert(total_categories, category)
+    end
     local machine_entity = {
         type = "assembling-machine",
         name = machine.name,
@@ -116,7 +122,7 @@ local function generate(machine)
         corpse = machine.remnants or "medium-remnants",
         collision_box = collision.collision_box,
         selection_box = collision.selection_box,
-        crafting_categories = {machine.name},
+        crafting_categories = total_categories,
         crafting_speed = machine.speed or 1,
         energy_usage = VOLTAGE_FUEL_VALUES:get_consumption(machine.voltage),
         energy_source = {
