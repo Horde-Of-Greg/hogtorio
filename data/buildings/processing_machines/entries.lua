@@ -1,4 +1,3 @@
-local voltages = require("data.constants").VOLTAGES
 
 local entries = {
     {
@@ -121,26 +120,4 @@ local entries = {
     }
 }
 
--- Generate versions of every machine for every voltage
-local generated_entries = {}
-for _, entry in ipairs(entries) do
-    for _, voltage in ipairs(voltages) do
-        local new_entry = table.deepcopy(entry)
-        new_entry.voltage = voltage
-        new_entry.name = voltage .. "-" .. entry.name
-        -- Add the base animation
-        table.insert(new_entry.states, {
-            name = "base",
-            layers = {{
-                filename = "__hogtorio__/graphics/buildings/processing_machine/base_voltage/" .. voltage .. "/side.png",
-                width = 16,
-                height = 16,
-                scale = new_entry.sprite_scale or 1,
-            }}
-        })
-        table.insert(generated_entries, new_entry)
-    end 
-end
-
-
-return generated_entries
+return entries

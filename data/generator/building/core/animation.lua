@@ -8,7 +8,7 @@ local function get_animation_layers(layers, speed)
         table.insert(animation_layers, {
             filename = layer.filename,
             frame_count = layer.frame_count or 1,
-            line_length = layer.line_length,
+            line_length = layer.line_length or 1,
             lines_per_file = layer.lines_per_file or layer.frame_count or 1,
             width = layer.width or 64,
             height = layer.height or 64,

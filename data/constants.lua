@@ -37,6 +37,8 @@ local COMMON_MATERIAL_RELATIONSHIPS = {
     stick = "ingot",
 }
 
+local PROCESSING_MACHINES = {}
+local MULTIBLOCKS = {}
 
 return {
     VOLTAGES = VOLTAGES,

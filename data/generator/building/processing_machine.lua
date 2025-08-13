@@ -2,7 +2,16 @@ local BuildingAnimation = require("core.animation")
 local VOLTAGE_FUEL_VALUES = require("data.constants").VOLTAGE_FUEL_VALUES
 local generate_recipe_group = require("data.generator.group.recipe_group")
 
-local function get_machine_base_sprite(machine)
+local function get_machine_base_sprite(machine, as_multiblock)
+    if as_multiblock then
+        return {
+            {
+                icon = machine.states[1].layers[1].filename,
+                icon_size = 32,
+                scale = machine.icon_scale or 1,
+            }
+        }
+    end
     local layers = {}
     -- original machine.name is machine_voltage-machine_name, so we need to split it
     local m_volt = machine.name:match("^(%w+)-")
@@ -44,8 +53,14 @@ local function get_fluidboxes(machine)
     return boxes
 end
 
-local function get_machine_fuelbox(machine)
-    return {
+local function get_machine_fuelbox(machine, is_multiblock)
+    local pipe_con_position
+    if not machine.horizontal_energy_hatch then
+        pipe_con_position = {0, machine.height / 2 - 0.5}
+    else
+        pipe_con_position = {machine.width / 2 - 0.5, 0}
+    end
+    local fboxes = {
         production_type = "input-output",
         pipe_covers = pipecoverspictures(),
             pipe_picture = assembler2pipepictures(),
@@ -54,15 +69,18 @@ local function get_machine_fuelbox(machine)
                 {
                     flow_direction = "input-output",
                     direction = defines.direction.north,
-                    position = {0, -machine.height / 2 + 0.5}
+                    position = {-pipe_con_position[1], -pipe_con_position[2]}
                 }, {
                     flow_direction = "input-output",
                     direction = defines.direction.south,
-                    position = {0, machine.height / 2 - 0.5}
+                    position = pipe_con_position
                 }
             },
-            filter = "voltage-" .. machine.voltage,
         }
+    if not is_multiblock then
+        fboxes.filter = "voltage-" .. machine.voltage
+    end
+    return fboxes
 end
 
 local function get_machine_collision_box(machine)
@@ -87,21 +105,35 @@ local function get_graphics_set(machine)
     })
 end
 
-local function generate(machine)
+local function generate(machine, as_multiblock)
+    local is_multiblock = as_multiblock or false
     -- Default category
     generate_recipe_group({
         name = machine.name,
-        order = machine.order or "a",
-        localised_name = machine.localised_name or "Processing Machine: " .. machine.name,
+        order = machine.order or machine.name or "a",
+        localised_name = machine.localised_name or ("Processing Machine: " .. machine.name),
     })
-    local m_volt = machine.name:match("^(%w+)-")
-    local m_volt_upper = string.upper(m_volt)
+    local machine_localized_name
+    if not is_multiblock then
+        local m_volt = machine.name:match("^(%w+)-")
+        local m_volt_upper = string.upper(m_volt)
+        machine_localized_name = m_volt_upper .. " " .. machine.locale_name
+    else
+        machine_localized_name = machine.locale_name
+    end
+
+    local subcat
+    if is_multiblock then
+        subcat = "multiblocks"
+    else
+        subcat = "processing-machines-" .. machine.voltage
+    end
     local machine_item = {
         type = "item",
         name = machine.name,
-        localised_name = m_volt_upper .. " " .. machine.locale_name,
-        icons = get_machine_base_sprite(machine),
-        subgroup = "processing-machines-" .. machine.voltage,
+        localised_name = machine_localized_name,
+        icons = get_machine_base_sprite(machine, as_multiblock),
+        subgroup = subcat,
         order = machine.order or "a",
         place_result = machine.name,
         stack_size = 64
@@ -112,11 +144,17 @@ local function generate(machine)
     for _, category in ipairs(machine.custom_recipe_categories or {}) do
         table.insert(total_categories, category)
     end
+    local energ_usage
+    if is_multiblock then
+        energ_usage = machine.energy_usage or "1MW"
+    else
+        energ_usage = VOLTAGE_FUEL_VALUES:get_consumption(machine.voltage)
+    end
     local machine_entity = {
         type = "assembling-machine",
         name = machine.name,
-        localised_name = m_volt_upper .. " " .. machine.locale_name,
-        icons = get_machine_base_sprite(machine),
+        localised_name = machine_localized_name,
+        icons = get_machine_base_sprite(machine, as_multiblock),
         minable = {mining_time = machine.mining_time or 1, result = machine.name},
         max_health = machine.health or 200,
         corpse = machine.remnants or "medium-remnants",
@@ -124,7 +162,7 @@ local function generate(machine)
         selection_box = collision.selection_box,
         crafting_categories = total_categories,
         crafting_speed = machine.speed or 1,
-        energy_usage = VOLTAGE_FUEL_VALUES:get_consumption(machine.voltage),
+        energy_usage = energ_usage,
         energy_source = {
             type = "fluid",
             fluid_box = get_machine_fuelbox(machine),
@@ -135,24 +173,46 @@ local function generate(machine)
         fluid_boxes = get_fluidboxes(machine),
     }
     data:extend({machine_item, machine_entity})
-    if contains(get_keys(machine.recipe), m_volt) then
-        local recipe = machine.recipe[m_volt]
-        local ingredients = {}
-        for _, ingredient in ipairs(recipe.ingredients) do
-            table.insert(ingredients, {
-                type = "item",
-                name = ingredient[1],
-                amount = ingredient[2] or 1
-            })
+    -- if contains(get_keys(machine.recipe), m_volt) then
+    if not is_multiblock then
+        local m_volt = machine.name:match("^(%w+)-")
+        if contains(get_keys(machine.recipe), m_volt) then
+            local recipe = machine.recipe[m_volt]
+            local ingredients = {}
+            for _, ingredient in ipairs(recipe.ingredients) do
+                table.insert(ingredients, {
+                    type = "item",
+                    name = ingredient[1],
+                    amount = ingredient[2] or 1
+                })
+            end
+            local reel_recipe = {
+                type = "recipe",
+                name = recipe.name or machine.name,
+                category = recipe.category or "crafting",
+                subgroup = "processing-machines-" .. machine.voltage,
+                order = machine.order or "a",
+                energy_required = recipe.energy_required or 1,
+                ingredients = ingredients,
+                results = {
+                    {
+                        type = "item",
+                        name = machine.name,
+                        amount = 1
+                    }
+                },
+            }
+            data:extend { reel_recipe }
         end
+    else 
         local recipe = {
             type = "recipe",
-            name = recipe.name or machine.name,
-            category = recipe.category or "crafting",
+            name = machine.name,
+            category = machine.recipe.category or "crafting",
             subgroup = "processing-machines-" .. machine.voltage,
             order = machine.order or "a",
-            energy_required = recipe.energy_required or 1,
-            ingredients = ingredients,
+            energy_required = 1,
+            ingredients = machine.recipe.ingredients,
             results = {
                 {
                     type = "item",
