@@ -15,6 +15,7 @@ local function get_animation_layers(layers, speed)
             animation_speed = speed,
             scale = layer.scale or 1,
             repeat_count = layer.repeat_count,
+            shift = layer.shift
         })
     end
     return {
@@ -38,6 +39,8 @@ function BuildingAnimation:add_state(anim)
         -- This is a special case for the base animation
         self.base_anim = get_animation_layers(anim.layers)
         return
+    elseif anim.is_base then
+        self.base_anim = get_animation_layers(anim.layers)
     end
     local state = {
         name = anim.name,

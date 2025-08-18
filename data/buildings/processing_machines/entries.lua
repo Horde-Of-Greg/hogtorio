@@ -2,7 +2,7 @@
 local entries = {
     {
         name = "bender",
-        locale_name = "Metal Bender",
+        localised_name = "Metal Bender",
         width = 3,
         height = 3,
         order = "b",
@@ -40,7 +40,7 @@ local entries = {
         }
     }, {
         name = "lathe",
-        locale_name = "Lathe",
+        localised_name = "Lathe",
         width = 3,
         height = 3,
         order = "l",
@@ -80,7 +80,7 @@ local entries = {
         }
     }, {
         name = "assembler",
-        locale_name = "Assembling Machine",
+        localised_name = "Assembling Machine",
         width = 3,
         height = 3,
         order = "a",

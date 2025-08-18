@@ -54,3 +54,25 @@ for i, material_type in ipairs(material_types) do
         }
     })
 end
+
+generate{
+    type = "item-group",
+    name = "hogtorio",
+    localised_name = "Hogtorio",
+    icons = {{
+        icon = "__hogtorio__/graphics/misc/HOG-logo.png",
+        icon_size = 428,
+    }},
+    order = 'x',
+    subgroups = {
+        {
+            name = "hogtorio-wires",
+            localised_name = "Hogtorio Wires",
+            order = "a"
+        }, {
+            name = "multiblocks",
+            localised_name = "Hogtorio Multiblocks",
+            order = "b"
+        }
+    }
+}

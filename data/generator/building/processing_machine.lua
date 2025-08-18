@@ -113,27 +113,21 @@ local function generate(machine, as_multiblock)
         order = machine.order or machine.name or "a",
         localised_name = machine.localised_name or ("Processing Machine: " .. machine.name),
     })
-    local machine_localized_name
+    local machine_localised_name
     if not is_multiblock then
         local m_volt = machine.name:match("^(%w+)-")
         local m_volt_upper = string.upper(m_volt)
-        machine_localized_name = m_volt_upper .. " " .. machine.locale_name
+        machine_localised_name = m_volt_upper .. " " .. machine.localised_name
     else
-        machine_localized_name = machine.locale_name
+        machine_localised_name = machine.localised_name
     end
 
-    local subcat
-    if is_multiblock then
-        subcat = "multiblocks"
-    else
-        subcat = "processing-machines-" .. machine.voltage
-    end
     local machine_item = {
         type = "item",
         name = machine.name,
-        localised_name = machine_localized_name,
+        localised_name = machine_localised_name,
         icons = get_machine_base_sprite(machine, as_multiblock),
-        subgroup = subcat,
+        subgroup = "processing-machines-" .. machine.voltage,
         order = machine.order or "a",
         place_result = machine.name,
         stack_size = 64
@@ -153,7 +147,7 @@ local function generate(machine, as_multiblock)
     local machine_entity = {
         type = "assembling-machine",
         name = machine.name,
-        localised_name = machine_localized_name,
+        localised_name = machine_localised_name,
         icons = get_machine_base_sprite(machine, as_multiblock),
         minable = {mining_time = machine.mining_time or 1, result = machine.name},
         max_health = machine.health or 200,

@@ -1,4 +1,3 @@
-
 local VOLTAGES = {
     "lv",
     "mv",
@@ -32,6 +31,17 @@ function VOLTAGE_FUEL_VALUES:get_consumption(voltage)
     return string.gsub(base, "J", "W") -- Convert Joules to Watts
 end
 
+local COIL_TIERS = {
+    "cupronickel",
+    "kanthal",
+    "nichrome",
+    -- "rtm",
+    -- "hss-g",
+    -- "naq",
+    -- "trinium",
+    -- "tritanium"
+}
+
 local COMMON_MATERIAL_RELATIONSHIPS = {
     plate = "ingot",
     stick = "ingot",
@@ -45,4 +55,5 @@ return {
     VOLTAGE_TINTS = VOLTAGE_TINTS,
     VOLTAGE_FUEL_VALUES = VOLTAGE_FUEL_VALUES,
     COMMON_MATERIAL_RELATIONSHIPS = COMMON_MATERIAL_RELATIONSHIPS,
+    COIL_TIERS = COIL_TIERS,
 }

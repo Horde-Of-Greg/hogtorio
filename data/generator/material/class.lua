@@ -20,7 +20,7 @@ function Material:load_default_material_flags()
     }
 end
 
-function Material:get_locale_name(material)
+function Material:get_localised_name(material)
     if self.local_name then
         return self.local_name .. " " .. uppercase_first_letter(material)
     else
@@ -76,7 +76,7 @@ function Material:create_items()
             {
                 type = "item",
                 name = self.name .. "-" .. material,
-                localised_name = self:get_locale_name(material),
+                localised_name = self:get_localised_name(material),
                 localised_description = self.description,
                 icons = icons,
                 subgroup = "materials-" .. material .. "s",
@@ -107,7 +107,7 @@ function Material:create_default_recipes()
             {
                 type = "recipe",
                 name = self.name .. "-" .. material,
-                localised_name = self:get_locale_name(material),
+                localised_name = self:get_localised_name(material),
                 category = recipe_machine,
                 subgroup = "materials-" .. material .. "s",
                 order = "a",
@@ -131,7 +131,7 @@ function Material:create_recipes(load_default)
         data:extend({
             {
                 type = "recipe",
-                name = self:get_locale_name(recipe.name),
+                name = self:get_localised_name(recipe.name),
                 category = recipe.category or "crafting",
                 subgroup = recipe.subgroup or ("materials-" .. recipe.name .. "s"),
                 order = "a",

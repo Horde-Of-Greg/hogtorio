@@ -7,7 +7,7 @@ for i, voltage in ipairs(voltages) do
     table.insert(voltages_fluid, {
         type = "fluid",
         name = voltage.name,
-        localised_name = voltage.locale_name,
+        localised_name = voltage.localised_name,
         localised_description = voltage.description,
         factoriopedia_description = voltage.description,
         icon = voltage.icon,
@@ -19,7 +19,7 @@ for i, voltage in ipairs(voltages) do
     table.insert(voltages_fluid, {
         type = "recipe",
         name = voltage.name .. "-generation",
-        localised_name = "Generate " .. voltage.locale_name,
+        localised_name = "Generate " .. voltage.localised_name,
         category = "voltage-production",
         energy_required = voltage.energy_required,
         ingredients = {},

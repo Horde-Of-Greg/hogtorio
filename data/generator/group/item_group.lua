@@ -1,11 +1,11 @@
 
 local function generate(item_group)
-    local default_localized_name = "Hogtorio Item Group: " .. item_group.name
+    local default_localised_name = "Hogtorio Item Group: " .. item_group.name
     local default_localized_description = "Hogtorio Item Group: " .. item_group.name .. " Description"
     local group = {
         type = "item-group",
         name = item_group.name,
-        localised_name = item_group.localised_name or default_localized_name,
+        localised_name = item_group.localised_name or default_localised_name,
         localised_description = item_group.localised_description or default_localized_description,
         order = item_group.order or "a",
         icons = item_group.icons,
