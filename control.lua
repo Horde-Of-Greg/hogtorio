@@ -1,2 +1,2 @@
 
-require('scripts.loader')
+require('runtime.init')

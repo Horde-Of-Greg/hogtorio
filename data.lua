@@ -1,2 +1,2 @@
 
-require('data.loader')
+require('prototypes.init')

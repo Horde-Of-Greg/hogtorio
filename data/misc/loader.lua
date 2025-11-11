@@ -1,2 +1,0 @@
-
-require('recipe_categories')
