@@ -52,7 +52,8 @@ function process_entity_for_destruction(entity_id, entity)
     if entity and entity.valid then
         storage.registered_entities[entity_id] = nil
         local vol = entity.prototype.fluidbox_prototypes[1].volume
-        local fluid_name = get_keys(get_fluidbox(entity):get_fluid_segment_contents(1))[1]
+        local fluidbox = get_fluidbox(entity)
+        local fluid_name = fluidbox.name
         entity.remove_fluid{name=fluid_name, amount=math.floor(vol * 2)}
         for _, player in pairs(game.connected_players) do
             player.disable_alert(defines.alert_type.entity_destroyed)
@@ -86,7 +87,7 @@ function scan_entity(entity_id, entity)
     local fluidbox = get_fluidbox(entity)
     
     -- Check compatibility with current fluid
-    if not check_entity_restriction(entity, fluidbox.name) then
+    if fluidbox and not check_entity_restriction(entity, fluidbox.name) then
         process_entity_for_destruction(entity_id, entity)
     end
 end

@@ -49,8 +49,8 @@ for _, wire in ipairs(wire_data) do
 
     recipe = {
         type = "recipe",
-        name = wire.name .. "-recipe",
-        localised_name = "Craft " .. wire.localised_name,
+        name = wire.name,
+        localised_name = wire.localised_name,
         category = "crafting",
         subgroup = wire.subgroup,
         energy_required = 0.5,

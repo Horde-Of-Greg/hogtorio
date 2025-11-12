@@ -4,7 +4,7 @@ local voltages = require("constants").VOLTAGES
 
 -- Generate processing machine groups/subgroups
 local voltage_proc_machines_subgroups = {}
-for i, voltage in ipairs(voltages) do
+for i, voltage in voltages:iter() do
     local subgroup = {
         name = "processing-machines-" .. voltage,
         order = tostring(i) .. "[voltage]",

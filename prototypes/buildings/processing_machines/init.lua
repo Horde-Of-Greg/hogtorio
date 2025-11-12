@@ -6,11 +6,11 @@ local voltages = require("constants").VOLTAGES
 -- Generate versions of every machine for every voltage
 local generated_entries = {}
 for _, entry in ipairs(entries) do
-    for i, voltage in ipairs(voltages) do
+    for i, voltage in voltages:iter() do
         local new_entry = table.deepcopy(entry)
         new_entry.voltage = voltage
         new_entry.name = voltage .. "-" .. entry.name
-        new_entry.speed = 2 ^ i
+        new_entry.speed = voltages:getMultiplier(voltage)
         -- Add the base animation
         table.insert(new_entry.states, {
             name = "base",

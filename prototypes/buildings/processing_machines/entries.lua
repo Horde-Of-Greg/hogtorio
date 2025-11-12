@@ -15,6 +15,20 @@ local entries = {
                     { "iron-gear-wheel",    5 }
                 }
             },
+            mv = {
+                ingredients = {
+                    { "steel-plate",        20 },
+                    { "advanced-circuit",   10 },
+                    { "iron-gear-wheel",    10 }
+                }
+            },
+            hv = {
+                ingredients = {
+                    { "steel-plate",        40 },
+                    { "processing-unit",    20 },
+                    { "iron-gear-wheel",    20 }
+                }
+            },
         },
         
         states = {
@@ -44,7 +58,6 @@ local entries = {
         width = 3,
         height = 3,
         order = "l",
-        animation_tempo = 6,
         sprite_scale = 6,
         recipe = {
             lv = {
@@ -68,7 +81,7 @@ local entries = {
             }, {
                 name = 'working',
                 next_inactive = 'idle',
-                speed = 0.3,
+                speed = 0.1,
                 layers = {{
                     filename = "__hogtorio__/graphics/buildings/processing_machine/machine/lathe/overlay_front_active.png",
                     width = 16,
@@ -86,7 +99,6 @@ local entries = {
         order = "a",
         sprite_scale = 6,
         custom_recipe_categories = {'lv-lathe'},
-        animation_tempo = 22,
         recipe = {
             lv = {
                 ingredients = {

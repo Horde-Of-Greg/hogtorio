@@ -2,6 +2,7 @@
 local material_check = require("types")
 require("util.array")
 require("util.string")
+local VOLTAGES = require("constants").VOLTAGES
 local COMMON_MATERIAL_RELATIONSHIPS = require("constants").COMMON_MATERIAL_RELATIONSHIPS
 
 local Material = {}
@@ -20,11 +21,19 @@ function Material:load_default_material_flags()
     }
 end
 
-function Material:get_localised_name(material)
-    if self.local_name then
-        return self.local_name .. " " .. uppercase_first_letter(material)
+function Material:get_localised_name(material, voltage)
+    if voltage then
+        if self.local_name then
+            return { "", self.local_name .. " " .. uppercase_first_letter(material) .. " (", uppercase(VOLTAGES[voltage]), ")" }
+        else 
+            return { "", self.name .. " " .. uppercase_first_letter(material) .. " (", uppercase(VOLTAGES[voltage]), ")" }
+        end
     else
-        return uppercase_first_letter(material)
+        if self.local_name then
+            return { "", self.local_name .. " " .. uppercase_first_letter(material) }
+        else
+            return { "", self.name .. " " .. uppercase_first_letter(material) }
+        end
     end
 end
 
@@ -40,6 +49,7 @@ function Material:new(
     instance.recipes = props.recipes or {}
     instance.min_voltage = props.min_voltage or "lv"
     instance.hardness = props.hardness or 1
+    instance.crafting_time = props.crafting_time or 1
 
     instance:load_default_material_flags()
     if props.flags then
@@ -128,18 +138,21 @@ function Material:create_recipes(load_default)
         self:create_default_recipes()
     end
     for _, recipe in ipairs(self.recipes) do
-        data:extend({
-            {
-                type = "recipe",
-                name = self:get_localised_name(recipe.name),
-                category = recipe.category or "crafting",
-                subgroup = recipe.subgroup or ("materials-" .. recipe.name .. "s"),
-                order = "a",
-                energy_required = recipe.energy_required or 1,
-                ingredients = recipe.ingredients,
-                result = recipe.result
-            }
-        })
+        for _, voltage in ipairs(VOLTAGES.getBetterVoltages(self.min_voltage)) do
+            data:extend({
+                {
+                    type = "recipe",
+                    name = self.name .. "-" .. recipe.name .. "-" .. voltage,
+                    localised_name = self:get_localised_name(recipe.name, voltage),
+                    category = voltage .. "-" .. (recipe.category or "crafting"),
+                    subgroup = recipe.subgroup or ("materials-" .. recipe.name .. "s"),
+                    order = "a",
+                    energy_required = get_recipe_time(recipe.time or 1, self.hardness),
+                    ingredients = recipe.ingredients,
+                    result = self.name .. "-" .. recipe.name
+                }
+            })
+        end
     end
 end
 
