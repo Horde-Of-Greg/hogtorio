@@ -1,0 +1,2 @@
+
+require('crafting_station')

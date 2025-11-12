@@ -9,6 +9,9 @@ local function generate(thing)
         order = thing.order,
         stack_size = thing.stack_size or 64,
     }
+    if thing.placeable then
+        item.place_result = thing.name
+    end
     data:extend{item}
 
     if thing.recipe then

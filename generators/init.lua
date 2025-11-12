@@ -2,8 +2,10 @@ local generate_material = require("material.material")
 local generate_processing_machine = require("building.processing_machine")
 local generate_item_group = require("group.item_group")
 local generate_recipe_group = require("group.recipe_group")
+local generate_recipe = require("recipe")
+local generate_entity = require("entity")
 local generate_item = require("item")
-local generate_module_group = require("module.module_group")
+local generate_module_group = require("module_group")
 local generate_multiblock_ebf = require("building.ebf")
 
 return {
@@ -16,4 +18,6 @@ return {
     recipe_group = generate_recipe_group,
     module_group = generate_module_group,
     item = generate_item,
+    entity = generate_entity,
+    recipe = generate_recipe,
 }
