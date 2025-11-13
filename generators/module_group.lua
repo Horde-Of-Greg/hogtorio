@@ -12,15 +12,16 @@ local function generate(module_group)
         if mod.productivity then effects.productivity = mod.productivity end
         local module = {
             type = "module",
-            name = "module-" .. mod.name,
+            name = mod.name,
             localised_name = mod.localised_name or ("Hogtorio Module: " .. mod.name),
             icon = mod.icon,
-            order = mod.order or "a",
+            order = mod.order or tostring(i),
             icon_size = mod.icon_size or 32,
 
             category = module_group.name,
             effect = effects,
-            tier = i
+            tier = i,
+            stack_size = mod.stack_size or 1,
         }
         data:extend{module}
 
@@ -34,7 +35,7 @@ local function generate(module_group)
             energy_required = mod.recipe.energy_required or 1,
             ingredients = mod.recipe.ingredients or {},
             results = {
-                {type = "item", name = "module-" .. mod.name, amount = 1}
+                {type = "item", name = mod.name, amount = 1}
             }
         }
         data:extend{module_recipe}

@@ -68,6 +68,8 @@ generate_entity({
     energy_source = {
         type = "void",
     },
+    module_slots = 2,
+    module_categories = {"wrench-tools", "files-tools", 'hammer-tools'},
     states = {
         {
             layers = {{

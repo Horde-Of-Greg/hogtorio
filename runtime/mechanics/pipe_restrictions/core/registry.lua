@@ -20,11 +20,11 @@ if not storage.fluid_destruction_messages then
 end
 
 
-function register_fluid_category(category_name)
+local function register_fluid_category(category_name)
     storage.fluid_categories[category_name] = true
 end
 
-function register_fluid(fluid_name, category_name)
+local function register_fluid(fluid_name, category_name)
     if is_not_key(storage.fluid_categories, category_name) then
         error("Fluid category '" .. category_name .. "' does not exist.")
     end
@@ -39,7 +39,7 @@ function register_fluid(fluid_name, category_name)
 end
 
 -- Registers pipe entity and restrict it to the fluid category
-function register_prototype(prototype_name, fluid_categories, destruction_message)
+local function register_prototype(prototype_name, fluid_categories, destruction_message)
     if is_not_key(storage.pipe_restrictions, prototype_name) then
         storage.pipe_restrictions[prototype_name] = {}
     end
@@ -59,23 +59,33 @@ end
 
 
 
-function get_fluid_categories()
+local function get_fluid_categories()
     return get_keys(storage.fluid_categories)
 end
 
-function get_registered_entities()
+local function get_registered_entities()
     return get_keys(storage.registered_entities)
 end
 
-function get_registered_prototypes()
+local function get_registered_prototypes()
     return get_keys(storage.pipe_restrictions)
 end
 
-function is_registered_prototype(prototype_name)
+local function is_registered_prototype(prototype_name)
     return is_key(storage.pipe_restrictions, prototype_name)
 end
 
-function get_fluid_restrictions()
+local function get_fluid_restrictions()
     return storage.fluid_restrictions
 end
 
+return {
+    register_fluid_category = register_fluid_category,
+    register_fluid = register_fluid,
+    register_prototype = register_prototype,
+    get_fluid_categories = get_fluid_categories,
+    get_registered_entities = get_registered_entities,
+    get_registered_prototypes = get_registered_prototypes,
+    is_registered_prototype = is_registered_prototype,
+    get_fluid_restrictions = get_fluid_restrictions,
+}

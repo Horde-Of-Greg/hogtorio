@@ -1,5 +1,9 @@
 
-require('core.init')
+local registry = require('runtime.mechanics.pipe_restrictions.core.registry')
+local register_prototype, register_fluid_category, register_fluid =
+    registry.register_prototype,
+    registry.register_fluid_category,
+    registry.register_fluid
 
 -- Register fluid categories
 register_fluid_category("lv-power")

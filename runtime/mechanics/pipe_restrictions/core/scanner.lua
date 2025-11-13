@@ -3,15 +3,15 @@ if not storage.register_entities then
     storage.registered_entities = {}
 end
 
-function register_entity(entity)
+local function register_entity(entity)
     storage.registered_entities[entity.unit_number] = entity
 end
 
-function deregister_entity(entity)
+local function deregister_entity(entity)
     storage.registered_entities[entity.unit_number] = nil
 end
 
-function check_prototype_restriction(prototype_name, fluid_name)
+local function check_prototype_restriction(prototype_name, fluid_name)
     if is_not_key(storage.pipe_restrictions, prototype_name) then
         return false
     end
@@ -26,7 +26,7 @@ function check_prototype_restriction(prototype_name, fluid_name)
     return false
 end
 
-function get_fluidbox(entity)
+local function get_fluidbox(entity)
     if entity.prototype.name == "assembling-machine" and entity.fluid_energy_source_prototype then
         return entity.fluid_energy_source_prototype.fluid_box
     else 
@@ -34,7 +34,7 @@ function get_fluidbox(entity)
     end
 end
 
-function check_entity_restriction(entity, fluid_name)
+local function check_entity_restriction(entity, fluid_name)
     if is_not_key(storage.registered_entities, entity.unit_number) then
         return false
     end
@@ -48,7 +48,7 @@ if not storage.pipe_destruction_queue then
     storage.pipe_destruction_queue = {}
 end
 
-function process_entity_for_destruction(entity_id, entity)
+local function process_entity_for_destruction(entity_id, entity)
     if entity and entity.valid then
         storage.registered_entities[entity_id] = nil
         local vol = entity.prototype.fluidbox_prototypes[1].volume
@@ -73,7 +73,7 @@ function process_entity_for_destruction(entity_id, entity)
     end
 end
 
-function scan_entity(entity_id, entity)
+local function scan_entity(entity_id, entity)
     if not entity or not entity.valid then
         storage.registered_entities[entity_id] = nil
         return
@@ -92,7 +92,7 @@ function scan_entity(entity_id, entity)
     end
 end
 
-function scan()
+local function scan()
     if not storage.registered_entities then
         return
     end
@@ -116,3 +116,9 @@ function scan()
     scan_entity(next_entity, entity)
 end
 
+return {
+    register_entity = register_entity,
+    deregister_entity = deregister_entity,
+    check_entity_restriction = check_entity_restriction,
+    scan = scan,
+}
