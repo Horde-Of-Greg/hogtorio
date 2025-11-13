@@ -1,4 +1,5 @@
 require('util.array')
+local event_handler = require('runtime.event_handler')
 
 --- This module managers the registrations of machines that require tool modules. This includes the machines, the modules, and the recipes that need them
 
@@ -80,6 +81,8 @@ end
 
 
 local pending_status_updates = {}
+local current_crafting_state_tick = 0
+local prev_missing_modules = {}
 local function update_entity_crafting_state(entity_unit_number)
     if not storage.tool_system.registered_entities[entity_unit_number] then return end
 
@@ -104,47 +107,81 @@ local function update_entity_crafting_state(entity_unit_number)
     else
         requirements_met = true
     end
-
-    for _, player in pairs(game.connected_players) do
-        if player.opened and player.opened == entity then
-            if not pending_status_updates[player.index] then
-                pending_status_updates[player.index] = {}
-            end
-            pending_status_updates[player.index][entity_unit_number] = true
-        end
-    end
-
+    local has_changed = false
     if requirements_met then
-        entity.disabled_by_script = false
+        if entity.disabled_by_script then
+            has_changed = true
+            entity.disabled_by_script = false
+        end
         entity.custom_status = nil
     else
+        if not entity.disabled_by_script then
+            has_changed = true
+            entity.disabled_by_script = true
+        end
+    end
+    local missing_modules_changed = #missing_modules ~= #(prev_missing_modules[entity_unit_number] or {})
+    
+    prev_missing_modules[entity_unit_number] = missing_modules
+
+    if has_changed or missing_modules_changed then
         local localizedModuleNames = {}
         for _, module_name in ipairs(missing_modules) do
             table.insert(localizedModuleNames, prototypes.item[module_name].localised_name or module_name)
         end
-        entity.disabled_by_script = true
-        local req_recipe_name = entity.get_recipe().name
-        local localized_req_recipe_name = prototypes.recipe[req_recipe_name].localised_name or req_recipe_name
-        entity.custom_status = {
-            diode = defines.entity_status_diode.red,
-            label = "Can't craft: missing required tool modules for " .. localized_req_recipe_name .. ": " .. table.concat(localizedModuleNames, ", ")
-        }
-    end
-end
-
-script.on_event(defines.events.on_tick, function (_)
-    for player_index, entities in pairs(pending_status_updates) do
-        local player = game.get_player(player_index)
-        if player and player.valid then
-            for entity_unit_number, _ in pairs(entities) do
-                local entity = storage.tool_system.registered_entities[entity_unit_number]
-                if entity and entity.valid then
-                    player.opened = entity
+        local req_recipe = entity.get_recipe()
+        if req_recipe then
+           local req_recipe_name = entity.get_recipe().name
+            local localized_req_recipe_name = prototypes.recipe[req_recipe_name].localised_name or req_recipe_name
+            entity.custom_status = {
+                diode = defines.entity_status_diode.red,
+                label = "Can't craft: missing required tool modules for " ..
+                    localized_req_recipe_name .. ": " .. table.concat(localizedModuleNames, ", ")
+            }
+            for _, player in pairs(game.connected_players) do
+                if player.opened and player.opened == entity then
+                    if not pending_status_updates[player.index] then
+                        pending_status_updates[player.index] = {}
+                    end
+                    player.opened = nil
+                    pending_status_updates[player.index][entity_unit_number] = true
                 end
+                current_crafting_state_tick = game.tick
             end
         end
     end
-    pending_status_updates = {}
+end
+
+-- script.on_event(defines.events.on_tick, function (_)
+--     for player_index, entities in pairs(pending_status_updates) do
+--         local player = game.get_player(player_index)
+--         if player and player.valid then
+--             for entity_unit_number, _ in pairs(entities) do
+--                 local entity = storage.tool_system.registered_entities[entity_unit_number]
+--                 if entity and entity.valid then
+--                     player.opened = entity
+--                 end
+--             end
+--         end
+--     end
+--     pending_status_updates = {}
+-- end)
+event_handler:on("update", function (event)
+    if current_crafting_state_tick < game.tick then
+        for player_index, entities in pairs(pending_status_updates) do
+            local player = game.get_player(player_index)
+            if player and player.valid then
+                for entity_unit_number, _ in pairs(entities) do
+                    local entity = storage.tool_system.registered_entities[entity_unit_number]
+                    if entity and entity.valid and not player.opened then
+                        player.opened = entity
+                    end
+                end
+            end
+        end
+        pending_status_updates = {}
+        current_crafting_state_tick = math.huge
+    end
 end)
 
 return {
