@@ -8,7 +8,7 @@ sigma saluso
 - [ ] Crafting Bench: Crafting machine only working when GUI is opened
 - [ ] Ores Dimension: Dimension for mining, with later methods to transport items to main dim
 - [ ] Mechanics to add
-  - [ ] Tools
+  - [x] Tools
   - [ ] Researching
   - [ ] Farming
   - [ ] Nuclear Fission

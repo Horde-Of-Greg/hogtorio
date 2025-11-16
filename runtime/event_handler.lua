@@ -20,6 +20,10 @@ function EventHandler:on_nth_tick(tick, event_id, handler)
     end)
 end
 
+function EventHandler:on_init(handler)
+    self:on("init", handler)
+end
+
 function EventHandler:emit(event_id, ...)
     local handlers = self.events[event_id]
     if handlers then

@@ -3,6 +3,7 @@ local event_handler = require('runtime.event_handler')
 
 require('mechanics.pipe_restrictions.init')
 require('mechanics.tools.init')
+require("mechanics.work_when_open.init")
 
 script.on_init(function()
     event_handler:emit("init")
@@ -31,3 +32,11 @@ for _, event in ipairs({
         event_handler:emit("entity_removed", e)
     end)
 end
+
+script.on_event(defines.events.on_gui_opened, function(e)
+    event_handler:emit("gui_opened", e)
+end)
+
+script.on_event(defines.events.on_gui_closed, function(e)
+    event_handler:emit("gui_closed", e)
+end)

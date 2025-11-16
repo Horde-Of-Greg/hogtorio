@@ -35,7 +35,7 @@ end
 --     register_entries()
 --     create_queues(true)
 -- end)
-event_handler:on("init", function()
+event_handler:on_init(function()
     registry.init_storage()
     register_entries()
     create_queues(true)
