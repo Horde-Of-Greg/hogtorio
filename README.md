@@ -13,3 +13,5 @@ sigma saluso
   - [ ] Farming
   - [ ] Nuclear Fission
   - [ ] Fusion
+  - [ ] Fluid Handling
+  - [ ] Power Generation
