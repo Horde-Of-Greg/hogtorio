@@ -6,7 +6,7 @@ local function generate(fluid)
         icons = {
             {
                 icon = icon_str,
-                icon_size = 16,
+                icon_size = 64,
             }
         },
         subgroup = fluid.subgroup or "fluids",

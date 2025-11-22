@@ -34,7 +34,7 @@ for _, fluid in pairs(entries) do
         icons = {
             {
                 icon = "__hogtorio__/graphics/fluids/" .. fluid.name .. ".png",
-                icon_size = 16,
+                icon_size = 64,
             },
         },
         order = "a[" .. fluid.name .. "-creative-generation]",
