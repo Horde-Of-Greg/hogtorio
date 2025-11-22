@@ -5,6 +5,7 @@ local generate_recipe_group = require("group.recipe_group")
 local generate_recipe = require("recipe")
 local generate_entity = require("entity")
 local generate_item = require("item")
+local generate_fluid = require("fluid")
 local generate_module_group = require("module_group")
 local generate_multiblock_ebf = require("building.ebf")
 
@@ -18,6 +19,7 @@ return {
     recipe_group = generate_recipe_group,
     module_group = generate_module_group,
     item = generate_item,
+    fluid = generate_fluid,
     entity = generate_entity,
     recipe = generate_recipe,
 }

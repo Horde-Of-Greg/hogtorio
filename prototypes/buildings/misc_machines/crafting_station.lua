@@ -9,7 +9,6 @@ generate_item({
         {
             icon = "__hogtorio__/graphics/buildings/misc/crafting_station.png",
             icon_size = 16,
-            icon_mipmaps = 4,
         },
     },
     subgroup = "storage",
@@ -39,7 +38,6 @@ generate_recipe({
         {
             icon = "__base__/graphics/icons/iron-gear-wheel.png",
             icon_size = 64,
-            icon_mipmaps = 4,
         },
     },
     order = "a[sample-recipe]",
@@ -59,7 +57,6 @@ generate_entity({
         {
             icon = "__hogtorio__/graphics/buildings/misc/crafting_station.png",
             icon_size = 16,
-            icon_mipmaps = 4,
         },
     },
     size = {3, 3},

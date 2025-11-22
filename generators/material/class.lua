@@ -3,6 +3,7 @@ local material_check = require("types")
 require("util.array")
 require("util.string")
 local VOLTAGES = require("constants").VOLTAGES
+require("util.color")
 local COMMON_MATERIAL_RELATIONSHIPS = require("constants").COMMON_MATERIAL_RELATIONSHIPS
 
 local Material = {}
